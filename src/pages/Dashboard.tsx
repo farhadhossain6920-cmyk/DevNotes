@@ -19,6 +19,7 @@ export default function Dashboard() {
   // Posts state
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -92,6 +93,32 @@ export default function Dashboard() {
     }
   };
 
+  const handleSeedPosts = async () => {
+    if (!user) return;
+    setIsSeeding(true);
+    try {
+      const dummyPosts = Array.from({ length: 10 }).map((_, i) => ({
+        user_id: user.id,
+        title: `Example Snippet ${i + 1}`,
+        description: `This is an auto-generated example snippet number ${i + 1} to help you test the layout and functionality of the application.`,
+        language: ['JavaScript', 'Python', 'React', 'TypeScript', 'CSS', 'HTML', 'SQL', 'Bash'][i % 8],
+        code_content: `// Example code for snippet ${i + 1}\nfunction helloWorld() {\n  console.log("Hello from snippet ${i + 1}!");\n}\n\nhelloWorld();`,
+        preview_image_url: null
+      }));
+
+      const { error } = await supabase.from('posts').insert(dummyPosts);
+      if (error) throw error;
+      
+      await fetchMyPosts();
+      alert('Successfully seeded 10 posts!');
+    } catch (err: any) {
+      console.error('Error seeding posts:', err);
+      alert('Failed to seed posts: ' + err.message);
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -159,9 +186,14 @@ export default function Dashboard() {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-white">My Snippets</h2>
-                <Link to="/new">
-                  <Button size="sm">Create New</Button>
-                </Link>
+                <div className="flex gap-3">
+                  <Button size="sm" variant="secondary" onClick={handleSeedPosts} isLoading={isSeeding}>
+                    Seed 10 Posts
+                  </Button>
+                  <Link to="/new">
+                    <Button size="sm">Create New</Button>
+                  </Link>
+                </div>
               </div>
               
               {isLoadingPosts ? (

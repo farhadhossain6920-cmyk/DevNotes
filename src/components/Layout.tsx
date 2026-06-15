@@ -3,18 +3,17 @@ import { Code2, LogOut, Plus, ShieldAlert, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Button } from './Button';
+import { useRole } from '../hooks/useRole';
 
 export function Layout() {
   const { user, profile } = useAuth();
+  const { isAdmin } = useRole();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
   };
-
-  const isSuperAdmin = user?.email === import.meta.env.VITE_SUPER_ADMIN_EMAIL;
-  const isAdmin = profile?.role === 'admin' || isSuperAdmin;
 
   return (
     <div className="min-h-screen flex flex-col">
