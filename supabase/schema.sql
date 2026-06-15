@@ -148,3 +148,9 @@ BEGIN
   END IF;
 END;
 $$;
+
+-- 10. Sync existing users to profiles if they are missing
+INSERT INTO public.profiles (id, email, display_name, role)
+SELECT id, email, COALESCE(raw_user_meta_data->>'display_name', split_part(email, '@', 1)), 'user'::user_role
+FROM auth.users
+WHERE id NOT IN (SELECT id FROM public.profiles);
