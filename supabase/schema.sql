@@ -1,7 +1,11 @@
 -- Supabase Schema for DevNotes
 
 -- 1. Create custom types
-CREATE TYPE IF NOT EXISTS user_role AS ENUM ('user', 'admin');
+DO $$ BEGIN
+    CREATE TYPE user_role AS ENUM ('user', 'admin');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- 2. Create the profiles table (extends auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -30,10 +34,13 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 
 -- 5. Profiles Policies
--- Anyone authenticated can read all profiles
-CREATE POLICY "Profiles are viewable by authenticated users."
+DROP POLICY IF EXISTS "Profiles are viewable by authenticated users." ON public.profiles;
+DROP POLICY IF EXISTS "Profiles are viewable by everyone." ON public.profiles;
+DROP POLICY IF EXISTS "Users can update own display_name." ON public.profiles;
+
+-- Anyone can read all profiles
+CREATE POLICY "Profiles are viewable by everyone."
   ON public.profiles FOR SELECT
-  TO authenticated
   USING (true);
 
 -- Users can update their own display_name ONLY
@@ -44,10 +51,15 @@ CREATE POLICY "Users can update own display_name."
   WITH CHECK (auth.uid() = id);
 
 -- 6. Posts Policies
--- Anyone authenticated can read all posts
-CREATE POLICY "Posts are viewable by authenticated users."
+DROP POLICY IF EXISTS "Posts are viewable by authenticated users." ON public.posts;
+DROP POLICY IF EXISTS "Posts are viewable by everyone." ON public.posts;
+DROP POLICY IF EXISTS "Users can insert own posts." ON public.posts;
+DROP POLICY IF EXISTS "Users can update own posts; Admins can update any post." ON public.posts;
+DROP POLICY IF EXISTS "Users can delete own posts; Admins can delete any post." ON public.posts;
+
+-- Anyone can read all posts
+CREATE POLICY "Posts are viewable by everyone."
   ON public.posts FOR SELECT
-  TO authenticated
   USING (true);
 
 -- Users can insert their own posts
@@ -73,6 +85,10 @@ CREATE POLICY "Users can delete own posts; Admins can delete any post."
     (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
   );
 
+-- Drop trigger if it exists (for reruns)
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+
 -- 7. Trigger to auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -88,9 +104,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Drop trigger if it exists (for reruns)
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
@@ -102,6 +115,9 @@ VALUES ('post-previews', 'post-previews', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Storage RLS
+DROP POLICY IF EXISTS "Preview images are publicly accessible." ON storage.objects;
+DROP POLICY IF EXISTS "Users can upload preview images to own folder." ON storage.objects;
+
 -- Public read access
 CREATE POLICY "Preview images are publicly accessible."
   ON storage.objects FOR SELECT
