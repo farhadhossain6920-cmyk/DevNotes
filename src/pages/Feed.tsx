@@ -6,6 +6,7 @@ import { Input, Select } from '../components/Input';
 import { Search, Image as ImageIcon } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { MOCK_POSTS } from '../lib/mockData';
 
 export default function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -30,8 +31,10 @@ export default function Feed() {
       `)
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
+    if (!error && data && data.length > 0) {
       setPosts(data as unknown as Post[]);
+    } else {
+      setPosts(MOCK_POSTS);
     }
     setIsLoading(false);
   };

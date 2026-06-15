@@ -4,9 +4,10 @@ import { supabase, Post } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../lib/utils';
 import { Button } from '../components/Button';
-import { Trash2, Copy, Check, ArrowLeft, Image as ImageIcon, Edit } from 'lucide-react';
+import { Copy, Check, ArrowLeft, Image as ImageIcon, Edit, Trash2 } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { MOCK_POSTS } from '../lib/mockData';
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,12 @@ export default function PostDetail() {
 
     if (!error && data) {
       setPost(data as unknown as Post);
+    } else {
+      // Fallback to mock data
+      const mockPost = MOCK_POSTS.find(p => p.id === id);
+      if (mockPost) {
+        setPost(mockPost);
+      }
     }
     setIsLoading(false);
   };
