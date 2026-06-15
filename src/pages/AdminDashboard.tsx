@@ -149,9 +149,14 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4">{formatDate(post.created_at)}</td>
                     <td className="px-6 py-4 text-right">
-                      <Button variant="danger" size="sm" onClick={() => handleDeletePost(post.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="secondary" size="sm" onClick={() => navigate(`/edit/${post.id}`)}>
+                          Edit
+                        </Button>
+                        <Button variant="danger" size="sm" onClick={() => handleDeletePost(post.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}

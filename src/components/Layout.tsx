@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { Code2, LogOut, Plus, ShieldAlert } from 'lucide-react';
+import { Code2, LogOut, Plus, ShieldAlert, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Button } from './Button';
@@ -43,9 +43,11 @@ export function Layout() {
                   </Button>
                 </Link>
                 <div className="w-px h-6 bg-white/20 mx-2 hidden sm:block"></div>
-                <div className="text-sm text-slate-300 hidden sm:block">
-                  {profile?.display_name || user.email}
-                </div>
+                <Link to="/dashboard" className="text-sm flex items-center gap-2 text-slate-300 hover:text-white transition-colors" title="Dashboard">
+                  <UserCircle className="w-5 h-5 hidden sm:block" />
+                  <span className="hidden sm:block">{profile?.display_name || user.email}</span>
+                  <UserCircle className="w-5 h-5 sm:hidden" />
+                </Link>
                 <Button variant="ghost" size="sm" onClick={handleLogout} title="Log out">
                   <LogOut className="w-4 h-4" />
                 </Button>

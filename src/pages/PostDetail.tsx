@@ -4,7 +4,7 @@ import { supabase, Post } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../lib/utils';
 import { Button } from '../components/Button';
-import { Trash2, Copy, Check, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { Trash2, Copy, Check, ArrowLeft, Image as ImageIcon, Edit } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -121,6 +121,10 @@ export default function PostDetail() {
               
               {canEditOrDelete && (
                 <div className="flex items-center gap-2">
+                  <Button variant="secondary" size="sm" onClick={() => navigate(`/edit/${post.id}`)}>
+                    <Edit className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </Button>
                   <Button variant="danger" size="sm" onClick={handleDelete} isLoading={isDeleting}>
                     <Trash2 className="w-4 h-4 sm:mr-2" />
                     <span className="hidden sm:inline">Delete</span>
