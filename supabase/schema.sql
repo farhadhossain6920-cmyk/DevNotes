@@ -102,7 +102,10 @@ BEGIN
     new.email,
     COALESCE(new.raw_user_meta_data->>'display_name', split_part(new.email, '@', 1)),
     'user'::user_role
-  );
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    display_name = EXCLUDED.display_name;
   RETURN new;
 END;
 $$;
