@@ -177,7 +177,7 @@ export default function AdminDashboard() {
                 <div className="space-y-1">
                   <label className="block text-sm font-medium text-slate-300 mb-1">New Role</label>
                   <select 
-                    className="flex h-10 w-full rounded-lg glass-input px-3 py-2 text-sm [&>option]:bg-[#1A1040] [&>option]:text-white"
+                    className="flex h-10 w-full rounded-lg glass-input px-3 py-2 text-sm [&>option]:bg-[#0A0515] [&>option]:text-white"
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as 'admin' | 'user')}
                   >

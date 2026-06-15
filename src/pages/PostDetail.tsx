@@ -136,7 +136,7 @@ export default function PostDetail() {
             )}
           </div>
 
-          <div className="relative rounded-xl overflow-hidden border border-white/10 bg-[#1E1E1E]">
+          <div className="relative rounded-xl overflow-hidden border border-white/10 bg-[#0D0D12]">
             <div className="absolute top-0 left-0 right-0 h-12 bg-black/40 flex items-center justify-between px-4 border-b border-white/5 z-10">
               <span className="text-xs font-mono text-slate-400">{post.language}</span>
               <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 text-xs bg-white/5 hover:bg-white/10">

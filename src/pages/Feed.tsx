@@ -108,7 +108,7 @@ export default function Feed() {
                       <span className="text-xs uppercase tracking-wider font-semibold opacity-50">No Cover</span>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1040]/80 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050211]/90 to-transparent"></div>
                   <div className="absolute bottom-3 right-3">
                     <span className="px-2.5 py-1 text-xs font-mono font-medium bg-black/60 backdrop-blur-md rounded-md text-violet-300 border border-violet-500/20">
                       {post.language}
@@ -129,8 +129,8 @@ export default function Feed() {
                     </h3>
                   </div>
                   
-                  <div className="mt-auto relative rounded-lg overflow-hidden border border-white/5 bg-[#1E1E1E]">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1E1E1E] z-10 pointer-events-none"></div>
+                  <div className="mt-auto relative rounded-lg overflow-hidden border border-white/5 bg-[#0D0D12]">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0D0D12] z-10 pointer-events-none"></div>
                     <SyntaxHighlighter
                       language={post.language.toLowerCase()}
                       style={vscDarkPlus}

@@ -72,7 +72,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
           id={id}
           ref={ref}
           className={cn(
-            'flex h-10 w-full rounded-lg glass-input px-3 py-2 text-sm [&>option]:bg-[#1A1040] [&>option]:text-white',
+            'flex h-10 w-full rounded-lg glass-input px-3 py-2 text-sm [&>option]:bg-[#0A0515] [&>option]:text-white',
             className
           )}
           {...props}
